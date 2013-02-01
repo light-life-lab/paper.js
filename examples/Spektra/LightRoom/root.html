@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Light Room</title>
+	<link rel="stylesheet" href="../../css/style.css">
+	<script type="text/javascript" src="../../../dist/paper.js"></script>
+	<script type="text/paperscript" canvas="canvas">
+		var path;
+		var rect = new Rectangle([0, 0], [20, 20]);
+
+		var surface = {
+			width: 16,
+			height: 16,
+			pixelSize: 40,
+		}
+
+		var pixels = new Array();
+		/*
+		var pixels = {
+			array: new Array();
+		}
+	*/
+
+		var o = new Point(0,0);
+		var s = new Size(surface.pixelSize,surface.pixelSize);
+
+		var pixel = {
+			origin: o,
+			size: s,
+		}
+
+		project.currentStyle = {
+			fillColor: 'black',
+			strokeColor: '#333333',
+			strokeWidth: 1,
+		}
+
+	  //fill pixels.array with pixel data
+		//pixels.array[0] = pixel;
+
+	  //SETUP
+	  	var pMap = generateCoordinates(surface.width,surface.height,surface.pixelSize);
+	  	console.log(pMap);
+
+	  	//pixels[0] = pushPixel(pixel);
+
+	  	for (var m = 0;m<pMap.length;m++) {
+	  		pixels[m] = pushPixel(pMap[m],s);
+	  	}
+
+	  	function generateCoordinates(width,height,size) {
+	  		var map = new Array();
+
+	  		var pY = 0;
+
+	  		for (var y = 0;y<height;y++) {
+
+	  			pY = size*y;
+
+	  			for (var x = 0;x<width;x++) {
+	  		 		var pX = x*size;
+	  		 		var p = new Point(pX,pY);
+
+	  		 		map.push(p);
+	  			}
+
+	  		}
+
+	  		 return map;
+	  	}
+
+		function pushPixel(origin, size) {
+			console.log(origin);
+			console.log(size);
+			var pixelFrame = new Rectangle(origin, size);
+			var newPixel = new Path.Rectangle(pixelFrame);
+
+			return newPixel;
+		}
+
+		var frames = new Array();
+
+		var f1 = [
+				{
+					p: 24,
+					c: '#ff0000',
+				},
+				{
+					p: 23,
+					c: '#ff0000',
+				},
+			]
+
+		var f2 = [
+				{
+					p: 100,
+					c: '#ff0000',
+				},
+				{
+					p: 5,
+					c: '#ff0000',
+				},
+			]	
+
+		var f3 = [
+				{
+					p: 80,
+					c: '#ff0000',
+				},
+				{
+					p: 12,
+					c: '#ff0000',
+				},
+			]	
+
+			frames.push(f1,f2,f3);
+
+		console.log(frames);
+
+		var t = 0; //time counter
+		var f = 0; //frame counter
+		var tLoop = 20;
+
+		function fillPixel(pixelIndex,pixels,color) {
+			//console.log('fill');
+			pixels[pixelIndex].fillColor = color;
+			return;
+		}
+
+		function pushFrame(frameIndex,frames,pixels) {
+			//console.log(pixels);
+			//console.log(frames);
+			//console.log(frameIndex);
+
+			//console.log(pixels[0]);
+
+		  //clear all pixels
+			for (var c = 0;c<pixels.length;c++) {
+				//console.log(c);
+				fillPixel(c,pixels,'#000000');
+			}
+
+		  //set pixels in frame @ index
+			var frame = frames[frameIndex];
+			//console.log(frame);
+
+			for (var p = 0;p<frame.length;p++) {
+				
+				//console.log(frame[p]);
+				//pixels[frame.p].fillColor = frame.c;
+				fillPixel(frame[p].p,pixels,frame[p].c);
+			}
+
+		}
+
+		//fillPixel(0,pixels,'#00ff00');
+
+		//pushFrame(f,frames,pixels);
+
+		function onFrame(event) {
+			
+			/*
+			ANIMATION TYPES
+			
+			- frame by frame - all pixels
+
+
+			- frame by frame - active pixels
+
+
+			- gestures (active pixels with script)
+
+
+			- 
+
+			*/
+
+			pushFrame(f,frames,pixels);
+
+			//pixels[24].fillColor = '#ff0000';
+
+
+			console.log(t);
+
+			t++;
+
+			if (t === tLoop) {
+				t = 0; //console.log('----------------------');
+				
+				f++;
+				if (f === frames.length) f = 0;
+			}
+
+
+			
+
+			//path = new Path.Rectangle(rect);
+			//path.position = view.center;
+			/*if (path)
+				path.remove();
+			var size = Math.abs(Math.sin(event.count / 40)) * 150 + 10;
+			path = new Path.RoundRectangle(rect, size);
+			path.position = view.center;
+			*/
+		}
+	</script>
+</head>
+<body>
+	<canvas id="canvas" resize></canvas>
+</body>
+</html>
